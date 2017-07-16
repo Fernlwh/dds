@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="打地鼠.css"/>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var page = document.createElement("div");
+			page.className = "page";
+			page.id = "page";
+			var pageTop = document.createElement("div");
+			pageTop.className = "pageTop";
+			pageTop.id = "pageTop";
+			pageTop.innerHTML = "<div class='time'><img src='img/countdown_time.png'/><span>10s</span></div>"+
+								"<div class='share'><img src='img/countdown_share.png'/></div>"+
+								"<div class='startGame'><img src='img/game_btn_star.png'/></div>"+
+								"<div class='jihui'>剩余<span>5</span>次机会</div>";
+			page.appendChild(pageTop);
+			document.body.appendChild(page);//将page添加进body
+			var mice = document.createElement("div");
+			mice.className = "mice";
+			mice.id = "mice";
+			var str = "";
+			for(var i=0;i<12;i++){
+				str = str + "<div><img id='ds"+i+"' src='img/vendor_people00.png'/></div>"
+			}
+			mice.innerHTML = str;
+			page.appendChild(mice);
+			
+        //----------------------事件
+            var startBtn = document.querySelector(".startGame");
+            var timeSpan = document.querySelector(".time span");
+            var randomNum;
+            var score=0;
+            var orClick = false;
+            
+            var endGame = function(){
+            	var	endImg = document.createElement("div");
+            	endImg.className = "endImg";
+            	endImg.innerHTML = "<div><img src='img/pop_score_bg.png'/></div>"+
+                                   "<h3>"+score+"分</h3>" + 
+                                   "<h2 id = 'again'>再来一次</h2>"+
+                                   "<span><img src='img/pop_box_close.png'/></span>";
+                document.body.appendChild(endImg);
+                //重新刷新页面
+                document.querySelector("#again").onclick = function(){
+                	location.reload();
+                }
+                document.querySelector(".endImg span").onclick = function(){
+                	document.querySelector(".endImg").style.display = "none";
+                }
+            }
+              //开始按钮后执行的内容
+            var startEvent = function(){
+	          	//按钮消失
+	         	startBtn.style.display = "none";
+          	  //间隔函数
+         		var num = 10;
+	            var clearTime = setInterval(function(){
+	            	orClick = false;
+	            	for(var i = 0;i<12;i++){
+						document.querySelector("#ds"+i).src = "img/vendor_people00.png";
+					}
+	            	timeSpan.innerHTML = num + "s";
+	            	num--;
+	            	if(num < 0){
+	            		//清除计时器
+	            		clearInterval(clearTime);
+	            		console.log(score);						
+						endGame()
+	            	}
+	            	//随机整数
+	                 randomNum = parseInt(Math.random()*12);
+	                 console.log(randomNum);
+					document.querySelector("#ds"+randomNum).src = "img/vendor_hole01.png";
+	            },1000)
+               //				
+	            var clickMice = function(event){
+	            	console.log(event.target.id);
+	            	var str = "ds" + randomNum;
+	            	if(event.target.id == str){
+	            		event.target.src = "img/vendor_hole02.png";
+	            		score += 100;
+	            		orClick = true;
+	            	}
+	            }
+				
+	            mice.addEventListener("click",clickMice);
+	           }
+			startBtn.addEventListener("click",startEvent);
+			
+		</script>
+	</body>
+</html>
